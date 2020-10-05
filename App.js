@@ -16,96 +16,21 @@ import MapView, {
   PatternItemTypes,
 } from '@hmscore/react-native-hms-map';
 import mapStyleJson from './mapStyle.json';
+import AddMarker from './src/components/AddMarker';
+import AddCircle from './src/components/AddCircle';
+import AddPolygon from './src/components/AddPolygon';
+import DrawRoute from './src/components/DrawRoute';
 
-let markerView;
 let mapView;
 
-const addMarker = (lat, lng) => {
-  return (
-    <Marker
-      coordinate={{latitude: lat, longitude: lng}}
-      title="Hello"
-      snippet={
-        'My lat: ' +
-        parseFloat(lat).toFixed(3) +
-        ' lon: ' +
-        parseFloat(lng).toFixed(3)
-      }
-      draggable={true}
-      flat={true}
-      icon={{
-        asset: 'ic_launcher.png', // under assets folder
-      }}
-      markerAnchor={[0.5, 0.5]}
-      infoWindowAnchor={[0.5, 0.5]}
-      visible={true}
-      zIndex={3}
-      clusterable={false}
-      onClick={(e) => {
-        console.log('Marker onClick');
-      }}
-      onDragStart={(e) => console.log('Marker onDragStart', e.nativeEvent)}
-      onDrag={(e) => {
-        console.log('Marker onDrag', e.nativeEvent);
-      }}
-      onDragEnd={(e) =>
-        console.log('Marker onDragEnd', e.nativeEvent.coordinate)
-      }
-      onInfoWindowClick={(e) => console.log('Marker onInfoWindowClick')}
-      onInfoWindowClose={(e) => console.log('Marker onInfoWindowClose')}
-      onInfoWindowLongClick={(e) => console.log('Marker onInfoWindowLongClick')}
-      ref={(e) => {
-        markerView = e;
-      }}
-    />
-  );
-};
-
-const addCircle = (lat, lon) => {
-  return (
-    <Circle // Simple example
-      center={{latitude: lat, longitude: lon}}
-      radius={2000}
-      strokeWidth={5}
-      strokeColor={-256}
-    />
-  );
-};
-const drawPolygon = () => {
-  console.log('====================================');
-  console.log('Drawing polygon');
-  console.log('====================================');
-  return (
-    <Polygon // Complex example
-      points={[
-        {latitude: 41.1, longitude: 29.2},
-        {latitude: 40.9, longitude: 29.2},
-        {latitude: 40.9, longitude: 28.8},
-        {latitude: 41.1, longitude: 28.8},
-      ]}
-      clickable={true}
-      geodesic={true}
-      fillColor={538066306} // very transparent blue(0x20123D82)
-      strokeColor={-256} // yellow(0xFFFFFF00)
-      strokeJointType={JointTypes.BEVEL}
-      strokePattern={[
-        {type: PatternItemTypes.DASH, length: 20},
-        {type: PatternItemTypes.DOT},
-        {type: PatternItemTypes.GAP, length: 20},
-      ]}
-      zIndex={2}
-      onClick={(e) => console.log('Polygon onClick')}
-    />
-  );
-};
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      markerLat: 41,
-      markerLng: 29,
-      mapZoom: 9,
-      cameraZoom: 9,
+      markerLat: 39.91319446533336,
+      markerLng: 32.87366542685692,
+      mapZoom: 13,
+      cameraZoom: 13,
       locationPermission: false,
       myLocationEnabled: false,
       darkModeOn: false,
@@ -153,33 +78,35 @@ export default class App extends Component {
           buildingsEnabled={true}
           description="Huawei Map"
           onCameraIdle={(e) => {
-            console.log('MapView onCameraIdle, dsfdsf', e.nativeEvent);
+            // console.log('MapView onCameraIdle, dsfdsf', e.nativeEvent);
             const cameraPosition = e.nativeEvent;
-            console.log(
-              'MapView onCameraIdle, zoom',
-              parseFloat(cameraPosition.zoom.toFixed(2)),
-            );
+            // console.log(
+            //   'MapView onCameraIdle, zoom',
+            //   parseFloat(cameraPosition.zoom.toFixed(2)),
+            // );
             this.setState({
               cameraZoom: parseFloat(cameraPosition.zoom.toFixed(2)),
             });
-            console.log(
-              'MapView onCameraIdle, lat',
-              parseFloat(cameraPosition.target.latitude.toFixed(5)),
-            );
-            console.log(
-              'MapView onCameraIdle, lng',
-              parseFloat(cameraPosition.target.longitude.toFixed(5)),
-            );
+            // console.log(
+            //   'MapView onCameraIdle, lat',
+            //   parseFloat(cameraPosition.target.latitude.toFixed(5)),
+            // );
+            // console.log(
+            //   'MapView onCameraIdle, lng',
+            //   parseFloat(cameraPosition.target.longitude.toFixed(5)),
+            // );
           }}
           onMapReady={(e) => console.log('MapView onMapReady', e.nativeEvent)}
-          onCameraMoveCanceled={(e) =>
-            console.log('MapView onCameraMoveCanceled')
+          onCameraMoveCanceled={
+            (e) => {}
+            //     console.log('MapView onCameraMoveCanceled')
           }
           onCameraMove={(e) => {
-            console.log('MapView onCameraMove result', e.nativeEvent);
+            //    console.log('MapView onCameraMove result', e.nativeEvent);
           }}
-          onCameraMoveStarted={(e) =>
-            console.log('MapView onCameraMoveStarted, result', e.nativeEvent)
+          onCameraMoveStarted={
+            (e) => {}
+            //  console.log('MapView onCameraMoveStarted, result', e.nativeEvent)
           }
           onMapClick={(e) => {
             console.log('MapView was clicked', e.nativeEvent);
@@ -193,9 +120,11 @@ export default class App extends Component {
           ref={(e) => {
             mapView = e;
           }}>
-          {addMarker(markerLat, markerLng)}
-          {addCircle(markerLat, markerLng)}
-          {/* {drawPolygon()} */}
+          <DrawRoute />
+
+          {/* <AddMarker latitude={markerLat} longitude={markerLng} /> */}
+          {/* <AddCircle lat={markerLat} lng={markerLng} />
+          <AddPolygon /> */}
         </MapView>
         <View style={{flexDirection: 'row'}}>
           <View style={{flexDirection: 'row', flex: 1}}>
