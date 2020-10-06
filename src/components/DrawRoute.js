@@ -6,10 +6,10 @@ import {
   CapTypes,
 } from '@hmscore/react-native-hms-map';
 
-export default function DrawRoute() {
+export default function DrawRoute({latitude, longitude}) {
   const [steps, setSteps] = useState([]);
-  let mPolyline = [];
-  let mPoint = [];
+  let mPolylines = [];
+  let mPoints = [];
 
   useEffect(() => {
     const requestOptions = {
@@ -21,8 +21,8 @@ export default function DrawRoute() {
       },
       body: JSON.stringify({
         origin: {
-          lng: 32.87366542685692,
-          lat: 39.91319446533336,
+          lng: longitude,
+          lat: latitude,
         },
         destination: {
           lng: 32.86064633915178,
@@ -36,42 +36,38 @@ export default function DrawRoute() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log('data', data.routes[0].paths[0].steps);
+        console.log('data steps', data.routes[0].paths[0].steps);
         setSteps(data.routes[0].paths[0].steps);
       });
   }, []);
 
   steps.map((steps) => {
-    mPolyline.push(steps.polyline);
+    mPolylines.push(steps.polyline);
   });
-  mPolyline.map((point) => {
-    if (point.length > 1) {
-      point.map((arr) => {
-        mPoint.push({latitude: arr.lat, longitude: arr.lng});
-      });
-    }
+  console.log('mPolylines', mPolylines);
+
+  mPolylines.map((point) => {
+    point.map((arr) => {
+      mPoints.push({latitude: arr.lat, longitude: arr.lng});
+    });
   });
-  console.log('====================================');
-  console.log('points', mPoint);
-  console.log('====================================');
+  console.log('mPoints', mPoints);
   return (
     <Polyline
-      points={mPoint}
+      points={mPoints}
       clickable={true}
       geodesic={true}
-      color={-1879018753}
+      color={-49151}
       jointType={JointTypes.BEVEL}
       pattern={[{type: PatternItemTypes.DASH, length: 20}]}
       startCap={{
         type: CapTypes.ROUND,
       }}
       endCap={{
-        type: CapTypes.CUSTOM,
-        refWidth: 1000,
-        asset: 'ic_launcher.png', // under assets folder
+        type: CapTypes.ROUND,
       }}
       visible={true}
-      width={9.0}
+      width={6.0}
       zIndex={2}
       onClick={(e) => console.log('Polyline onClick')}
     />

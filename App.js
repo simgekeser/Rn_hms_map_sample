@@ -1,20 +1,8 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Switch,
-  Button,
-  View,
-  Text,
-  PermissionsAndroid,
-} from 'react-native';
-import MapView, {
-  Marker,
-  Polygon,
-  Circle,
-  JointTypes,
-  MapTypes,
-  PatternItemTypes,
-} from '@hmscore/react-native-hms-map';
+import {Switch, Button, View, Text, PermissionsAndroid} from 'react-native';
+import MapView, {MapTypes} from '@hmscore/react-native-hms-map';
+import HMSLocation from '@hmscore/react-native-hms-location';
+
 import mapStyleJson from './mapStyle.json';
 import AddMarker from './src/components/AddMarker';
 import AddCircle from './src/components/AddCircle';
@@ -27,10 +15,10 @@ export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      markerLat: 39.91319446533336,
-      markerLng: 32.87366542685692,
-      mapZoom: 13,
-      cameraZoom: 13,
+      markerLat: 0,
+      markerLng: 0,
+      mapZoom: 20,
+      cameraZoom: 20,
       locationPermission: false,
       myLocationEnabled: false,
       darkModeOn: false,
@@ -51,6 +39,17 @@ export default class App extends Component {
     } catch (err) {
       console.warn(err);
     }
+  }
+  componentDidMount() {
+    console.log('====================================');
+    console.log('Hiiii location');
+    console.log('====================================');
+    HMSLocation.FusedLocation.Native.getLastLocation()
+      .then((pos) => {
+        console.log('posLocatin', pos);
+        this.setState({markerLat: pos.latitude, markerLng: pos.longitude});
+      })
+      .catch((err) => console.log('Failed to get last location', err));
   }
   render() {
     const {markerLat, markerLng, cameraZoom, mapZoom} = this.state;
@@ -120,9 +119,11 @@ export default class App extends Component {
           ref={(e) => {
             mapView = e;
           }}>
-          <DrawRoute />
+          <AddMarker latitude={markerLat} longitude={markerLng} />
+          {(markerLat !== 0) & (markerLng !== 0) ? (
+            <DrawRoute latitude={markerLat} longitude={markerLng} />
+          ) : null}
 
-          {/* <AddMarker latitude={markerLat} longitude={markerLng} /> */}
           {/* <AddCircle lat={markerLat} lng={markerLng} />
           <AddPolygon /> */}
         </MapView>

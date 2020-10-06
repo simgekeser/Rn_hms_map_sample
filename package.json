@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@hmscore/react-native-hms-location": "^5.0.0-301",
     "@hmscore/react-native-hms-map": "^5.0.1-300",
     "react": "16.13.1",
     "react-native": "0.63.2"
