@@ -77,23 +77,17 @@ export default class App extends Component {
           buildingsEnabled={true}
           description="Huawei Map"
           onCameraIdle={(e) => {
-            // console.log('MapView onCameraIdle, dsfdsf', e.nativeEvent);
+
+            mapView
+                  .getHuaweiMapInfo()
+                  .then((a) => console.log(a))
+                  .catch((a) => console.log(a));
             const cameraPosition = e.nativeEvent;
-            // console.log(
-            //   'MapView onCameraIdle, zoom',
-            //   parseFloat(cameraPosition.zoom.toFixed(2)),
-            // );
+         
             this.setState({
               cameraZoom: parseFloat(cameraPosition.zoom.toFixed(2)),
             });
-            // console.log(
-            //   'MapView onCameraIdle, lat',
-            //   parseFloat(cameraPosition.target.latitude.toFixed(5)),
-            // );
-            // console.log(
-            //   'MapView onCameraIdle, lng',
-            //   parseFloat(cameraPosition.target.longitude.toFixed(5)),
-            // );
+           
           }}
           onMapReady={(e) => console.log('MapView onMapReady', e.nativeEvent)}
           onCameraMoveCanceled={
@@ -158,12 +152,9 @@ export default class App extends Component {
           <View style={{flexDirection: 'row', flex: 1}}>
             <Button
               title="Get Map Info"
-              onPress={() => {
-                mapView
-                  .getHuaweiMapInfo()
-                  .then((a) => console.log(a.visibleRegion))
-                  .catch((a) => console.log(a));
-              }}
+              onPress={() => {     
+                }
+              }
             />
           </View>
         </View>
